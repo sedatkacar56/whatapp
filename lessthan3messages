@@ -1,0 +1,35 @@
+import re
+from collections import defaultdict
+import tkinter as tk
+from tkinter import font
+
+# Create a tkinter root window to configure the font
+root = tk.Tk()
+font.nametofont("TkDefaultFont").configure(family="Arial")  # Change "Arial" to a font that supports the missing glyphs
+
+# Define a pattern to extract author names and messages
+pattern = r'\[.*?\] ([^:]+): (.+)'
+
+# Initialize a dictionary to count messages per author
+message_counts = defaultdict(int)
+
+# Read the text from the file
+with open("C:/Users/sedat/Downloads/chat.txt", "r", encoding="utf-8") as file:
+    for line in file:
+        match = re.match(pattern, line)
+        if match:
+            author, message = match.groups()
+            message_counts[author] += 1
+
+# Find and print members with fewer than 3 messages
+members_with_less_than_3_messages = [author for author, count in message_counts.items() if count < 10]
+
+if members_with_less_than_3_messages:
+    print("Members with fewer than 3 messages:")
+    for author in members_with_less_than_3_messages:
+        print(f"{author}: {message_counts[author]} messages")
+else:
+    print("No members with fewer than 3 messages found.")
+
+# Close the tkinter root window
+root.destroy()
